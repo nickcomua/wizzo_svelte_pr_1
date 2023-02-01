@@ -1,5 +1,3 @@
-import type { Image } from "sveltestrap";
-
 export type table_type = {
     [x: number]: {
         fixed: boolean;

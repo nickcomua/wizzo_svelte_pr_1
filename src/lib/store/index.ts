@@ -65,9 +65,6 @@ export const store = writable({
     main_config
 })
 
-
-
-
 export const data = readable({}, (set: Subscriber<{ [func: string]: { value: number, time: number } }>) => {
     const interval = setInterval(() => {
         let func_ids: string[] = []
@@ -91,13 +88,23 @@ export const data = readable({}, (set: Subscriber<{ [func: string]: { value: num
     };
 });
 
-const graphs_data_generate = () : {[id:string]:number[][][][]}  => {
+export const graphs_data = readable(graphs_data_generate(), (set) => {
+    const interval = setInterval(() => {
+        graphs_data_get().then(x => {
+            set(x)
+        })
+    }
+        , 1000)
+    return () => clearInterval(interval)
+})
+
+function graphs_data_generate(): { [id: string]: number[][][][] } {
     let main_config = get(store).main_config
     return Object.fromEntries(Object.keys(main_config).map(id =>
         [id, main_config[id].funcs_graph_position.map((val) => val.graphs.map(_ => Array.from({ length: val.point_quantity }, (_, i) => [i, Math.random() * 100])))]))//[i+1, Math.random()*100]))]))
 }
 
-const graphs_data_get = async (): Promise<{[id:string]:number[][][][]}> => {
+async function graphs_data_get(): Promise<{ [id: string]: number[][][][] }> {
     let main_config: main_conf_type = get(store).main_config
     return Object.fromEntries(
         await Promise.all(
@@ -112,12 +119,4 @@ const graphs_data_get = async (): Promise<{[id:string]:number[][][][]}> => {
                         )))))])))
 }
 
-export const graphs_data = readable(graphs_data_generate(), (set) => {
-    const interval = setInterval(() => {
-        graphs_data_get().then(x => {
-            ; set(x)
-        })
-    }
-        , 1000)
-    return () => clearInterval(interval)
-})
+

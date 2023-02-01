@@ -167,9 +167,9 @@
 					}}
 				>
 					{#if typeof info.photo == 'string'}
-						<Image value="sdfg" alt="pic" src={info.photo} style="max-width: 100%;" />
+						<Image value="photo" alt="pic" src={info.photo} style="max-width: 100%;" />
 					{:else}
-						<Image bind:this={info.photo} value="sdfg" alt="pic" style="max-width: 100%;" />
+						<Image bind:this={info.photo} value="photo" alt="pic" style="max-width: 100%;" />
 					{/if}
 				</div>
 				<input
